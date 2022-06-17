@@ -12,7 +12,7 @@
 - **Run Rainy.py**
 
 ## Is it open-source?
-- **Licensed Under the [GPL-3.0](https://github.com/NotCookey/Rainy/blob/main/LICENSE)**
+- **Licensed Under [GPL-3.0](https://github.com/NotCookey/Rainy/blob/main/LICENSE)**
 
 ## Thank you
 > **Thank you for visiting, Hope you found something useful!**
