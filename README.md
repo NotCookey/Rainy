@@ -4,7 +4,7 @@
 <kbd><img src="https://media.discordapp.net/attachments/984056158149017623/987280161349177354/Layer_0.png"></kbd>
 
 ## About
-- **Rainy Musicart is a lightweight music player written in Python using the beautiful [DearPyGui](https://github.com/hoffstadt/DearPyGui/) for the aesthetically designed interface and using many other thrid-party libaries.**
+- **Rainy Musicart is a lightweight music player built in Python that makes use of the lovely [DearPyGui](https://github.com/hoffstadt/DearPyGui/) for the aesthetically designed interface as well as a number of third-party libraries.**
 
 ## Install
 - **Download the repository**
