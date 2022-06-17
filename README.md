@@ -12,7 +12,7 @@
 - **Run Rainy.py**
 
 ## Is it open-source?
-- **Aboslutely! Under the [MIT License](https://github.com/NotCookey/Rainy/blob/main/LICENSE)**
+- **Absolutely! Under the [MIT License](https://github.com/NotCookey/Rainy/blob/main/LICENSE)**
 
 ## Thank you
 > **Thank you for visiting, Hope you found something useful!**
