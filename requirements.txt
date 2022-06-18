@@ -1,4 +1,3 @@
 dearpygui
-atexit
 mutagen
 pygame
