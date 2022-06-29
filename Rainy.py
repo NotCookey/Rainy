@@ -1,3 +1,6 @@
+from cProfile import label
+from email.policy import default
+from gc import callbacks
 import dearpygui.dearpygui as dpg
 import ntpath
 import json
@@ -17,6 +20,9 @@ pygame.mixer.init()
 
 global state
 state=None
+
+_DEFAULT_MUSIC_VOLUME = 0.5
+pygame.mixer.music.set_volume(0.5)
 
 def load_database():
 	songs=json.load(open("data/songs.json","r+"))["songs"]
@@ -82,6 +88,9 @@ def play_pause():
 				state="playing"
 				dpg.configure_item("csong",default_value=f"Now Playing : {ntpath.basename(song)}")
 				dpg.configure_item("cstate",default_value=f"State: Playing")
+
+def update_volume(sender, app_data):
+	pygame.mixer.music.set_volume(app_data / 100.0)
 
 def stop():
 	global state
@@ -157,6 +166,15 @@ with dpg.theme(tag="slider"):
 		dpg.add_theme_style(dpg.mvStyleVar_GrabRounding, 3)
 		dpg.add_theme_style(dpg.mvStyleVar_GrabMinSize, 30)
 
+with dpg.theme(tag="slider_thin"):
+	with dpg.theme_component():
+		dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (130, 142, 250,99))
+		dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (130, 142, 250,99))
+		dpg.add_theme_color(dpg.mvThemeCol_SliderGrabActive, (255, 255, 255))
+		dpg.add_theme_color(dpg.mvThemeCol_SliderGrab, (255, 255, 255))
+		dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (130, 142, 130,99))
+
+
 with dpg.theme(tag="songs"):
 	with dpg.theme_component():
 		dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 2)
@@ -196,7 +214,8 @@ with dpg.window(tag="main",label="window title"):
 				with dpg.group(horizontal=True):
 					dpg.add_button(label="Play",width=65,height=30,tag="play",callback=play_pause)
 					dpg.add_button(label="Stop",callback=stop,width=65,height=30)
-					dpg.add_slider_float(tag="pos",width=-1,pos=(155,19),format="")
+					dpg.add_slider_float(tag="volume", width=120,height=15,pos=(160,19),format="%.0f%.0%",default_value=_DEFAULT_MUSIC_VOLUME * 100,callback=update_volume)
+					dpg.add_slider_float(tag="pos",width=-1,pos=(295,19),format="")
 
 			with dpg.child_window(autosize_x=True,delay_search=True):
 				with dpg.group(horizontal=True,tag="query"):
@@ -205,6 +224,7 @@ with dpg.window(tag="main",label="window title"):
 				with dpg.child_window(autosize_x=True,delay_search=True,tag="list"):
 					load_database()
 
+	dpg.bind_item_theme("volume","slider_thin")
 	dpg.bind_item_theme("pos","slider")
 	dpg.bind_item_theme("list","songs")
 
