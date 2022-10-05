@@ -21,17 +21,22 @@ state=None
 _DEFAULT_MUSIC_VOLUME = 0.5
 pygame.mixer.music.set_volume(0.5)
 
-def load_database():
-	songs=json.load(open("data/songs.json","r+"))["songs"]
-	for filename in songs:
-		dpg.add_button(label=f"{ntpath.basename(filename)}",callback=play,width=-1,height=25,user_data=filename.replace("\\","/"),parent="list")
-		dpg.add_spacer(height=2,parent="list")
+def update_volume(sender, app_data):
+	pygame.mixer.music.set_volume(app_data / 100.0)
 
-def update_database(filename:str):
-	data=json.load(open("data/songs.json","r+"))
+def load_database():
+	songs = json.load(open("data/songs.json", "r+"))["songs"]
+	for filename in songs:
+		dpg.add_button(label=f"{ntpath.basename(filename)}", callback=play, width=-1,
+		               height=25, user_data=filename.replace("\\", "/"), parent="list")
+		dpg.add_spacer(height=2, parent="list")
+
+
+def update_database(filename: str):
+	data = json.load(open("data/songs.json", "r+"))
 	if filename not in data["songs"]:
-		data["songs"]+=[filename]
-	json.dump(data,open("data/songs.json","r+"),indent=4)
+		data["songs"] += [filename]
+	json.dump(data, open("data/songs.json", "r+"), indent=4)
 
 def update_slider():
 	global state
@@ -85,9 +90,6 @@ def play_pause():
 				state="playing"
 				dpg.configure_item("csong",default_value=f"Now Playing : {ntpath.basename(song)}")
 				dpg.configure_item("cstate",default_value=f"State: Playing")
-
-def update_volume(sender, app_data):
-	pygame.mixer.music.set_volume(app_data / 100.0)
 
 def stop():
 	global state
@@ -153,7 +155,7 @@ with dpg.theme(tag="base"):
 		dpg.add_theme_color(dpg.mvThemeCol_CheckMark, (221, 166, 185))
 		dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (172, 174, 197))
 
-with dpg.theme(tag="slider"):
+with dpg.theme(tag="slider_thin"):
 	with dpg.theme_component():
 		dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (130, 142, 250,99))
 		dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (130, 142, 250,99))
@@ -163,14 +165,15 @@ with dpg.theme(tag="slider"):
 		dpg.add_theme_style(dpg.mvStyleVar_GrabRounding, 3)
 		dpg.add_theme_style(dpg.mvStyleVar_GrabMinSize, 30)
 
-with dpg.theme(tag="slider_thin"):
+with dpg.theme(tag="slider"):
 	with dpg.theme_component():
 		dpg.add_theme_color(dpg.mvThemeCol_FrameBgActive, (130, 142, 250,99))
 		dpg.add_theme_color(dpg.mvThemeCol_FrameBgHovered, (130, 142, 250,99))
 		dpg.add_theme_color(dpg.mvThemeCol_SliderGrabActive, (255, 255, 255))
 		dpg.add_theme_color(dpg.mvThemeCol_SliderGrab, (255, 255, 255))
-		dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (130, 142, 130,99))
-
+		dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (130, 142, 250,99))
+		dpg.add_theme_style(dpg.mvStyleVar_GrabRounding, 3)
+		dpg.add_theme_style(dpg.mvStyleVar_GrabMinSize, 30)
 
 with dpg.theme(tag="songs"):
 	with dpg.theme_component():
