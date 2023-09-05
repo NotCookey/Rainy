@@ -1,4 +1,4 @@
-<p align="center"><img src="https://cdn.discordapp.com/attachments/984056158149017623/987276964660391996/Untitled-1.png" width="130px"></p>
+<p align="center"><img src="https://github.com/NotCookey/Rainy/assets/88582190/fc09007d-43a8-4526-8824-ad684a303d52" width="130px"></p>
 <h2 align="center">Rainy Musicart</h2>
 <p align="center"><b>Rainy Musicart is a lightweight music player with an aesthetically pleasing design</b></p>
 <kbd><img src="Layer_0.png"></kbd>
