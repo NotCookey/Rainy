@@ -11,9 +11,8 @@ import os
 import atexit
 
 dpg.create_context()
-dpg.create_viewport(title="MUSIC LIBRARY",large_icon="icon.ico",small_icon="icon.ico")
+dpg.create_viewport(title="Rainy Music",large_icon="icon.ico",small_icon="icon.ico")
 pygame.mixer.init()
-
 global state
 state=None
 
