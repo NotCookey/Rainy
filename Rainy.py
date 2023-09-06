@@ -8,15 +8,17 @@ import pygame
 import time
 import random
 import os
-import webbrowser
 import atexit
 
 dpg.create_context()
-dpg.create_viewport(title="Rainy Music",large_icon="icon.ico",small_icon="icon.ico")
+dpg.create_viewport(title="MUSIC LIBRARY",large_icon="icon.ico",small_icon="icon.ico")
 pygame.mixer.init()
 
 global state
 state=None
+
+global no
+no = 0
 
 _DEFAULT_MUSIC_VOLUME = 0.5
 pygame.mixer.music.set_volume(0.5)
@@ -29,6 +31,7 @@ def load_database():
 	for filename in songs:
 		dpg.add_button(label=f"{ntpath.basename(filename)}", callback=play, width=-1,
 		               height=25, user_data=filename.replace("\\", "/"), parent="list")
+		
 		dpg.add_spacer(height=2, parent="list")
 
 
@@ -40,10 +43,12 @@ def update_database(filename: str):
 
 def update_slider():
 	global state
-	while pygame.mixer.music.get_busy():
+	while pygame.mixer.music.get_busy() or state == 'paused':
 		dpg.configure_item(item="pos",default_value=pygame.mixer.music.get_pos()/1000)
 		time.sleep(0.7)
-	state=None
+	dpg.configure_item("next",show=False)
+	dpg.configure_item("pre",show=False)
+	state = None
 	dpg.configure_item("cstate",default_value=f"State: None")
 	dpg.configure_item("csong",default_value="Now Playing : ")
 	dpg.configure_item("play",label="Play")
@@ -51,8 +56,11 @@ def update_slider():
 	dpg.configure_item(item="pos",default_value=0)
 
 def play(sender, app_data, user_data):
-	global state
+	dpg.configure_item("next",show=True)
+	dpg.configure_item("pre",show=True)
+	global state,no
 	if user_data:
+		no = user_data
 		pygame.mixer.music.load(user_data)
 		audio = MP3(user_data)
 		dpg.configure_item(item="pos",max_value=audio.info.length)
@@ -63,9 +71,14 @@ def play(sender, app_data, user_data):
 			state="playing"
 			dpg.configure_item("cstate",default_value=f"State: Playing")
 			dpg.configure_item("csong",default_value=f"Now Playing : {ntpath.basename(user_data)}")
+		else:
+			dpg.configure_item("next",show=False)
+			dpg.configure_item("pre",show=False)
+
+
 
 def play_pause():
-	global state
+	global state,no
 	if state=="playing":
 		state="paused"
 		pygame.mixer.music.pause()
@@ -77,9 +90,13 @@ def play_pause():
 		dpg.configure_item("play",label="Pause")
 		dpg.configure_item("cstate",default_value=f"State: Playing")
 	else:
+		print("ok")
 		song = json.load(open("data/songs.json", "r"))["songs"]
 		if song:
 			song=random.choice(song)
+			no = song
+			dpg.configure_item("pre",show=True)
+			dpg.configure_item("next",show=True)
 			pygame.mixer.music.load(song)
 			pygame.mixer.music.play()
 			thread=threading.Thread(target=update_slider,daemon=False).start()	
@@ -90,6 +107,22 @@ def play_pause():
 				state="playing"
 				dpg.configure_item("csong",default_value=f"Now Playing : {ntpath.basename(song)}")
 				dpg.configure_item("cstate",default_value=f"State: Playing")
+
+def pre():
+	global state,no
+	songs = json.load(open('data/songs.json','r'))["songs"]
+	n = songs.index(no)
+	if n == 0:
+		n = len(songs)
+	play(sender=any,app_data=any,user_data=songs[n-1])
+
+def next():
+	global state,no
+	songs = json.load(open('data/songs.json','r'))["songs"]
+	n = songs.index(no)
+	if n == len(songs)-1:
+		n = -1
+	play(sender=any,app_data=any,user_data=songs[n+1])
 
 def stop():
 	global state
@@ -210,12 +243,17 @@ with dpg.window(tag="main",label="window title"):
 			dpg.add_separator()
 
 		with dpg.child_window(autosize_x=True,border=False):
-			with dpg.child_window(autosize_x=True,height=50,no_scrollbar=True):
+			with dpg.child_window(autosize_x=True,height=80,no_scrollbar=True):
 				with dpg.group(horizontal=True):
+					dpg.add_button(label="Pre",width=65,height=30,show=False,tag="pre",callback=pre)
+					dpg.add_spacer(width=20)
 					dpg.add_button(label="Play",width=65,height=30,tag="play",callback=play_pause)
+					dpg.add_spacer(width=20)
+					dpg.add_button(label="Next",tag="next",show=False,callback=next,width=65,height=30)
+					dpg.add_spacer(width=20)
 					dpg.add_button(label="Stop",callback=stop,width=65,height=30)
-					dpg.add_slider_float(tag="volume", width=120,height=15,pos=(160,19),format="%.0f%.0%",default_value=_DEFAULT_MUSIC_VOLUME * 100,callback=update_volume)
-					dpg.add_slider_float(tag="pos",width=-1,pos=(295,19),format="")
+					dpg.add_slider_float(tag="volume", width=120,height=15,pos=(100,59),format="%.0f%.0%",default_value=_DEFAULT_MUSIC_VOLUME * 100,callback=update_volume)
+					dpg.add_slider_float(tag="pos",width=-1,pos=(235,59),format="")
 
 			with dpg.child_window(autosize_x=True,delay_search=True):
 				with dpg.group(horizontal=True,tag="query"):
