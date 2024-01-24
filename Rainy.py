@@ -22,7 +22,7 @@ no = 0
 _DEFAULT_MUSIC_VOLUME = 0.5
 pygame.mixer.music.set_volume(0.5)
 
-def update_volume(sender, app_data):
+def update_volume(sender, app_data): #altera o volume da musica
 	pygame.mixer.music.set_volume(app_data / 100.0)
 
 def load_database():
