@@ -36,8 +36,18 @@ class Moises:
 
         return download_url
     
-    def download_arquivo(self, url, pasta):
-        wget.download(url, pasta)
+    def download_arquivo(self, url, pasta, nome_arq):
+        if not(os.path.exists(pasta)):
+            os.mkdir(pasta)
+        
+        download = pasta + "\\" + nome_arq
+
+        response = wget.download(url, download)
+
+        print("FUNCAO DOWNLOAD")
+        print(response)
+
+        return response
 
     def separa_vocal(self, arquivo):
 
@@ -77,12 +87,22 @@ class Moises:
                 vocais = response.json()['result']['vocal'] 
                 resto = response.json()['result']['resto'] 
 
-                path = "C:\\Code-1\\Hacka\\RhythmPlayer-\\teste\\" + nome_arq
+                #path = "C:\\Code-1\\Hacka\\RhythmPlayer-\\teste\\" + nome_arq
 
-                self.download_arquivo(vocais, path+"_voc.wav")
-                self.download_arquivo(resto, path+"_rest.wav")
+                path = os.getcwd() + "\\out\\" + nome_arq
 
-                break
+                voc_path = self.download_arquivo(vocais, path, "vocal.wav")
+                instr_path = self.download_arquivo(resto, path, "instr.wav")
+
+                if(os.path.exists(voc_path) and os.path.exists(instr_path)):
+                    print("Arquivos baixados com sucesso")
+                    paths = [voc_path, instr_path]
+                    print("paths: ", paths)
+                    return paths
+                else :
+                    print("Erro ao baixar arquivos")
+                    return None
+
             elif response.json()['status'] == 'FAILED':
 
                 print("JOB FAILED")
@@ -95,15 +115,40 @@ class Moises:
 
         arquivos_mp3 = [os.path.join(pasta, arquivo) for arquivo in arquivos if arquivo.lower().endswith('.mp3')]
 
+        paths = {}
+        
         for arquivo in arquivos_mp3:
-            self.separa_vocal(arquivo)
+            path = self.separa_vocal(arquivo)
+            if path is None:
+                print(f"Erro ao separar vocal do arquivo {os.path.basename(arquivo)}")
+            else:
+                paths[os.path.basename(arquivo)] = path
+
+        print("paths: ", paths)
+
+        return paths
     
 moises = Moises('8d1e044f-9250-4c66-b9a5-49911690500b')
 
-moises.ler_pasta("C:\\Code-1\\Hacka\\RhythmPlayer-\\test")
 
+#para testar coloque o path em que estao suas musicas nessa funçao e rode moises.py
+moises.ler_pasta("seu/path/aqui")
+
+#path = os.getcwd()
+#print(path)
 
 '''
+paths =  {'song - Copia (2).mp3': ['C:\\Code-1\\Hacka\\RhythmPlayer-\\out\\song - Copia (2).mp3\\vocal.wav', 
+                                  'C:\\Code-1\\Hacka\\RhythmPlayer-\\out\\song - Copia (2).mp3\\instr.wav'], 
+         'song - Copia.mp3': ['C:\\Code-1\\Hacka\\RhythmPlayer-\\out\\song - Copia.mp3\\vocal.wav', 
+                              'C:\\Code-1\\Hacka\\RhythmPlayer-\\out\\song - Copia.mp3\\instr.wav'], 
+         'song.mp3': ['C:\\Code-1\\Hacka\\RhythmPlayer-\\out\\song.mp3\\vocal.wav', 
+                      'C:\\Code-1\\Hacka\\RhythmPlayer-\\out\\song.mp3\\instr.wav']}
+
+json = json.dumps(paths)
+print(json)
+
+
 {'id': 'fa4ad6a6-e426-494f-af46-e988fc42130a', 'app': 'Default Application', 'workflow': 'separa_vocal', 'status': 'SUCCEEDED', 'batchName': None, 'workflowParams': {
 'inputUrl': 'https://storage.googleapis.com/moises-production--tmp/developer-portal/309b1612-4e10-42d2-bd83-1bca6aa97dcb?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=731360694588-compute%40developer.gserviceaccount.com%2F20240124%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20240124T180818Z&X-Goog-Expires=86400&X-Goog-SignedHeaders=host&X-Goog-Signature=9ebc05d07201a0fa2f2f6d00e5cb3ab658576193e31a10bbf76d4cfb42d0a2cb06781226f9a71e3cc5ac1c18f577fff6b9ebbb4a00922835b8b9a05da76dfc32acebed2bdcdd8c8fff09a2350437eec38ae49c320cd4e77c53aa4e86601d668e717bd3696cc84f26d86c39f06e22eb2068011aebb09039006dbd3cbcc84e5f2d9c4cad0ba4914c6e1c6562b10a380cb457a9a7e799a41338905f5c5ed9b39070be39a35fe8f8d37290cf6ac8d08021c3cdfa3b48ce4e6bad4f7aa48b93643476e135b3f9bb2b543f10f3c747034c037e1acf6972f8f916502fe966fe43feea922484ae11b270e75f5b3862c00f25c15ad4e6139696a74e0847f4ea10ee183b6d'}, 
 'metadata': {}, 
