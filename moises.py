@@ -9,7 +9,7 @@ class Moises:
     def __init__(self, api_key):
         self.api_key = api_key
 
-    def get_file_urls(self):
+    def get_file_urls(self): #obter um link que possa subir a musica e baixar 
         headers = {
             'Authorization': self.api_key,
         }
@@ -20,8 +20,7 @@ class Moises:
         download_url = json_data['downloadUrl']
         return upload_url, download_url
 
-
-    def upload(self, arquivo):
+    def upload(self, arquivo): #subir a musica para o link obtido na funçao get_file_urls
 
         upload_url, download_url = self.get_file_urls()
         
@@ -36,7 +35,7 @@ class Moises:
 
         return download_url
     
-    def download_arquivo(self, url, pasta, nome_arq):
+    def download_arquivo(self, url, pasta, nome_arq): #baixar o arquivo de audio separado
         if not(os.path.exists(pasta)):
             os.mkdir(pasta)
         
@@ -130,10 +129,13 @@ class Moises:
     
 moises = Moises('8d1e044f-9250-4c66-b9a5-49911690500b')
 
+#/home/luiz/Cod/RhythmPlayer-
 
 #para testar coloque o path em que estao suas musicas nessa funçao e rode moises.py
 moises.ler_pasta("seu/path/aqui")
 
+#obter path para dir atual 
+#print(os.getcwd())
 #path = os.getcwd()
 #print(path)
 
