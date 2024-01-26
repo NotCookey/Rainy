@@ -127,15 +127,14 @@ class Moises:
 
         return paths
     
-moises = Moises('8d1e044f-9250-4c66-b9a5-49911690500b')
-
-#/home/luiz/Cod/RhythmPlayer-
+moises = Moises('api-key-aqui')
 
 #para testar coloque o path em que estao suas musicas nessa funçao e rode moises.py
-moises.ler_pasta("seu/path/aqui")
+paths = moises.ler_pasta("seu/path/aqui")
 
-#obter path para dir atual 
-#print(os.getcwd())
+with open("./data/paths.json", "w") as arquivo_json:
+    json.dump(paths, arquivo_json)
+
 #path = os.getcwd()
 #print(path)
 
