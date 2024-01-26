@@ -4,41 +4,45 @@ import time
 import os
 import wget
 
+
 class Moises:
 
     def __init__(self, api_key):
         self.api_key = api_key
 
-    def get_file_urls(self): #obter um link que possa subir a musica e baixar 
+    def get_file_urls(self):  # obter um link que possa subir a musica e baixar
         headers = {
             'Authorization': self.api_key,
         }
-        response = requests.get("https://api.music.ai/api/upload", headers= headers)
+        response = requests.get(
+            "https://api.music.ai/api/upload", headers=headers)
         json_data = response.json()
 
         upload_url = json_data['uploadUrl']
         download_url = json_data['downloadUrl']
         return upload_url, download_url
 
-    def upload(self, arquivo): #subir a musica para o link obtido na funçao get_file_urls
+    def upload(self, arquivo):  # subir a musica para o link obtido na funçao get_file_urls
 
         upload_url, download_url = self.get_file_urls()
-        
+
         headers = {
             'Content-Type': 'audio/mpeg',
         }
 
-        response = requests.put(upload_url, headers=headers, data=open(arquivo, 'rb'))
+        response = requests.put(
+            upload_url, headers=headers, data=open(arquivo, 'rb'))
 
         print("FUNCAO UPLOAD")
         print(response.status_code)
 
         return download_url
-    
-    def download_arquivo(self, url, pasta, nome_arq): #baixar o arquivo de audio separado
-        if not(os.path.exists(pasta)):
+
+    # baixar o arquivo de audio separado
+    def download_arquivo(self, url, pasta, nome_arq):
+        if not (os.path.exists(pasta)):
             os.mkdir(pasta)
-        
+
         download = pasta + "\\" + nome_arq
 
         response = wget.download(url, download)
@@ -66,13 +70,14 @@ class Moises:
             }
         }
 
-        response = requests.post("https://api.music.ai/api/job", headers=headers, json=data)
-        
+        response = requests.post(
+            "https://api.music.ai/api/job", headers=headers, json=data)
+
         print("FUNCAO SEPARA VOCAL")
         print(response.status_code)
         print(response.json())
 
-        while(1):
+        while (1):
 
             job_url = "https://api.music.ai/api/job/" + response.json()['id']
             headers = {
@@ -80,25 +85,25 @@ class Moises:
             }
             response = requests.get(job_url, headers=headers)
             if response.json()['status'] == 'SUCCEEDED':
-                #baixa o arquivo
+                # baixa o arquivo
                 print(response.json())
 
-                vocais = response.json()['result']['vocal'] 
-                resto = response.json()['result']['resto'] 
+                vocais = response.json()['result']['vocal']
+                resto = response.json()['result']['resto']
 
-                #path = "C:\\Code-1\\Hacka\\RhythmPlayer-\\teste\\" + nome_arq
+                # path = "C:\\Code-1\\Hacka\\RhythmPlayer-\\teste\\" + nome_arq
 
                 path = os.getcwd() + "\\out\\" + nome_arq
 
                 voc_path = self.download_arquivo(vocais, path, "vocal.wav")
                 instr_path = self.download_arquivo(resto, path, "instr.wav")
 
-                if(os.path.exists(voc_path) and os.path.exists(instr_path)):
+                if (os.path.exists(voc_path) and os.path.exists(instr_path)):
                     print("Arquivos baixados com sucesso")
                     paths = [voc_path, instr_path]
                     print("paths: ", paths)
                     return paths
-                else :
+                else:
                     print("Erro ao baixar arquivos")
                     return None
 
@@ -112,31 +117,34 @@ class Moises:
     def ler_pasta(self, pasta):
         arquivos = os.listdir(pasta)
 
-        arquivos_mp3 = [os.path.join(pasta, arquivo) for arquivo in arquivos if arquivo.lower().endswith('.mp3')]
+        arquivos_mp3 = [os.path.join(
+            pasta, arquivo) for arquivo in arquivos if arquivo.lower().endswith('.mp3')]
 
         paths = {}
-        
+
         for arquivo in arquivos_mp3:
             path = self.separa_vocal(arquivo)
             if path is None:
-                print(f"Erro ao separar vocal do arquivo {os.path.basename(arquivo)}")
+                print(
+                    f"Erro ao separar vocal do arquivo {os.path.basename(arquivo)}")
             else:
                 paths[os.path.basename(arquivo)] = path
 
         print("paths: ", paths)
 
         return paths
-    
-moises = Moises('api-key-aqui')
 
-#para testar coloque o path em que estao suas musicas nessa funçao e rode moises.py
-paths = moises.ler_pasta("seu/path/aqui")
+# moises = Moises('api-key-aqui')
 
-with open("./data/paths.json", "w") as arquivo_json:
-    json.dump(paths, arquivo_json)
+# #para testar coloque o path em que estao suas musicas nessa funçao e rode moises.py
+# paths = moises.ler_pasta("seu/path/aqui")
 
-#path = os.getcwd()
-#print(path)
+# with open("./data/paths.json", "w") as arquivo_json:
+#     json.dump(paths, arquivo_json)
+
+# path = os.getcwd()
+# print(path)
+
 
 '''
 paths =  {'song - Copia (2).mp3': ['C:\\Code-1\\Hacka\\RhythmPlayer-\\out\\song - Copia (2).mp3\\vocal.wav', 
