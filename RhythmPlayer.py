@@ -121,8 +121,10 @@ def update_database_separados(dic, filename: str):
 def update_slider():
     global state, audio
     while pygame.mixer.music.get_busy() or state != 'paused':
-        print(pygame.mixer.music.get_pos()/1000+'-'+ audio.info.length)
-        if (pygame.mixer.music.get_pos()/1000 == audio.info.length):
+        print(f'{pygame.mixer.music.get_pos()/1000} - {audio.info.length}')
+        #print(type(pygame.mixer.music.get_pos()/1000))
+        #print(type(audio.info.length))
+        if (pygame.mixer.music.get_pos()/1000 >= (audio.info.length)-2.1):
             next_()
         dpg.configure_item(
             item="pos", default_value=pygame.mixer.music.get_pos()/1000)
@@ -166,8 +168,6 @@ def play(sender, app_data, user_data):
         return vocal
 
 # Controla o play/pause
-
-
 def play_pause():
 
     global state, no, sound
@@ -197,8 +197,6 @@ def play_pause():
             play(sender=any, app_data=any, user_data=song)
 
 # Reproduz a música anterior
-
-
 def pre():
     global state, no
     songs = json.load(open('data/paths.json', 'r'))
@@ -239,8 +237,6 @@ def stop():
     state = None
 
 # Adiciona arquivos na reprodução
-
-
 def add_files():
     data = json.load(open("data/paths.json", "r"))
     root = Tk()
