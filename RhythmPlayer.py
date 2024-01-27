@@ -25,6 +25,9 @@ no = 0
 global sound
 sound = None
 
+global audio
+audio = None
+
 _DEFAULT_MUSIC_VOLUME = 0.5
 pygame.mixer.music.set_volume(0.5)
 
@@ -74,11 +77,11 @@ def play_vocal(file_path, volume):
 # Atualiza a base de dados
 
 
-# def update_database(filename: str):
-#     data = json.load(open("data/songs.json", "r+"))
-#     if filename not in data["songs"]:
-#         data["songs"] += [filename]
-#     json.dump(data, open("data/songs.json", "r+"), indent=4)
+def update_database(filename: str):
+    data = json.load(open("data/paths.json", "r+"))
+    if filename not in data.keys():
+        data["songs"] += [filename]
+    json.dump(data, open("data/songs.json", "r+"), indent=4)
 
 
 def update_database_separados(dic, filename: str):
@@ -116,8 +119,11 @@ def update_database_separados(dic, filename: str):
 
 
 def update_slider():
-    global state
+    global state, audio
     while pygame.mixer.music.get_busy() or state != 'paused':
+        print(pygame.mixer.music.get_pos()/1000+'-'+ audio.info.length)
+        if (pygame.mixer.music.get_pos()/1000 == audio.info.length):
+            next_()
         dpg.configure_item(
             item="pos", default_value=pygame.mixer.music.get_pos()/1000)
         time.sleep(0.7)
@@ -130,10 +136,9 @@ def update_slider():
 
 # Reproduz a música
 
-
 def play(sender, app_data, user_data):
 
-    global state, no, sound
+    global state, no, sound, audio
 
     if user_data:
         if sound != None:
@@ -215,11 +220,12 @@ def next_():
     global state, no
     try:
         songs = json.load(open('data/paths.json', 'r'))
-        n = songs.index(no)
-        if n == len(songs)-1:
+        chaves = list(songs.keys())
+        n = chaves.index(no.musica)
+        if n == len(chaves)-1:
             n = -1
-        # sound.stop()
-        play(sender=any, app_data=any, user_data=songs[n+1])
+        tocar = Music(chaves[n+1], songs[chaves[n+1]][0], songs[chaves[n+1]][1])
+        play(sender=any, app_data=any, user_data=tocar)
     except:
         pass
 
@@ -243,15 +249,16 @@ def add_files():
         filetypes=[("Music Files", ("*.mp3", "*.wav", "*.ogg"))])
     root.quit()
     if filename.endswith(".mp3" or ".wav" or ".ogg"):
-        if filename not in data:
+        if ntpath.basename(filename) not in data.keys():
             ms = moises("29d82159-f9ac-4dc3-bcba-eef866e5a00e")
             dic_musica = ms.separa_vocal(filename)
+            musica_adicionada = Music(ntpath.basename(filename), dic_musica[0], dic_musica[1])
             # update_database(filename)
             update_database_separados(dic_musica, ntpath.basename(filename))
-            # dpg.add_button(label=f"{ntpath.basename(filename)}", callback=play, width=-1,
-            #                height=25, user_data=filename.replace("\\", "/"), parent="list")
-            # dpg.add_spacer(height=2, parent="list")
-    load_database()
+            dpg.add_button(label=f"{ntpath.basename(filename)}", callback=play, width=-1,
+                           height=25, user_data=musica_adicionada, parent="list")
+            dpg.add_spacer(height=2, parent="list")
+    # load_database()
 
 
 def add_folder():
@@ -262,18 +269,19 @@ def add_folder():
     root.quit()
     for filename in os.listdir(folder):
         if filename.endswith(".mp3" or ".wav" or ".ogg"):
-            if filename not in data:
+            if ntpath.basename(filename) not in data.keys():
                 ms = moises("29d82159-f9ac-4dc3-bcba-eef866e5a00e")
                 dic_musica = ms.separa_vocal(os.path.join(
                     folder, filename).replace("\\", "/"))
+                musica_adicionada = Music(ntpath.basename(filename), dic_musica[0], dic_musica[1])
                 # update_database(os.path.join(
                 # folder, filename).replace("\\", "/"))
                 update_database_separados(
                     dic_musica, ntpath.basename(filename))
-                # dpg.add_button(label=f"{ntpath.basename(filename)}", callback=play, width=-1, height=25,
-                #                user_data=os.path.join(folder, filename).replace("\\", "/"), parent="list")
-                # dpg.add_spacer(height=2, parent="list")
-    load_database()
+                dpg.add_button(label=f"{ntpath.basename(filename)}", callback=play, width=-1, height=25,
+                               user_data=musica_adicionada, parent="list")
+                dpg.add_spacer(height=2, parent="list")
+    # load_database()
 
 # Procura por uma música específica
 

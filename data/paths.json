@@ -1,18 +1,30 @@
 {
     "03 Kenny G pendrivetop.mp3": [
-        "C:\\Users\\lucas\\RhythmPlayer-\\out\\03 Kenny G pendrivetop.mp3\\vocal.wav",
-        "C:\\Users\\lucas\\RhythmPlayer-\\out\\03 Kenny G pendrivetop.mp3\\instr.wav"
+        ".\\out\\03 Kenny G pendrivetop.mp3\\vocal.wav",
+        ".\\out\\03 Kenny G pendrivetop.mp3\\instr.wav"
     ],
     "04 \u00c9 Sal.mp3": [
-        "C:\\Users\\lucas\\RhythmPlayer-\\out\\04 \u00c9 Sal.mp3\\vocal.wav",
-        "C:\\Users\\lucas\\RhythmPlayer-\\out\\04 \u00c9 Sal.mp3\\instr.wav"
+        ".\\out\\04 \u00c9 Sal.mp3\\vocal.wav",
+        ".\\out\\04 \u00c9 Sal.mp3\\instr.wav"
     ],
     "05 777-666.mp3": [
-        "C:\\Users\\lucas\\RhythmPlayer-\\out\\05 777-666.mp3\\vocal.wav",
-        "C:\\Users\\lucas\\RhythmPlayer-\\out\\05 777-666.mp3\\instr.wav"
+        ".\\out\\05 777-666.mp3\\vocal.wav",
+        ".\\out\\05 777-666.mp3\\instr.wav"
     ],
     "07 Gorilla Roxo.mp3": [
-        "C:\\Users\\lucas\\RhythmPlayer-\\out\\07 Gorilla Roxo.mp3\\vocal.wav",
-        "C:\\Users\\lucas\\RhythmPlayer-\\out\\07 Gorilla Roxo.mp3\\instr.wav"
+        ".\\out\\07 Gorilla Roxo.mp3\\vocal.wav",
+        ".\\out\\07 Gorilla Roxo.mp3\\instr.wav"
+    ],
+    "Air Supply - All Out Of Love.mp3": [
+        ".\\out\\Air Supply - All Out Of Love.mp3\\vocal.wav",
+        ".\\out\\Air Supply - All Out Of Love.mp3\\instr.wav"
+    ],
+    "Bee Gees - For Whom The Bell Tolls.mp3": [
+        "C:\\Users\\nanda\\Documents\\UFPB\\TAIL\\RhythmPlayer-\\out\\Bee Gees - For Whom The Bell Tolls.mp3\\vocal (1).wav",
+        "C:\\Users\\nanda\\Documents\\UFPB\\TAIL\\RhythmPlayer-\\out\\Bee Gees - For Whom The Bell Tolls.mp3\\instr (1).wav"
+    ],
+    "George Michael - Careless Whisper.mp3": [
+        "C:\\Users\\nanda\\Documents\\UFPB\\TAIL\\RhythmPlayer-\\out\\George Michael - Careless Whisper.mp3\\vocal (1).wav",
+        "C:\\Users\\nanda\\Documents\\UFPB\\TAIL\\RhythmPlayer-\\out\\George Michael - Careless Whisper.mp3\\instr (1).wav"
     ]
 }

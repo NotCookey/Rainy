@@ -160,13 +160,13 @@ def add_files():
     root.quit()
     if filename.endswith(".mp3" or ".wav" or ".ogg"):
         if filename not in data["songs"]:
-            ms = moises("29d82159-f9ac-4dc3-bcba-eef866e5a00e")
-            dic_musica = ms.separa_vocal(filename)
+            # ms = moises("29d82159-f9ac-4dc3-bcba-eef866e5a00e")
+            # dic_musica = ms.separa_vocal(filename)
             # print("111111111111111111111111111111111111111111111111111111")
             # print(type(dic_musica))
             # print(dic_musica)
             update_database(filename)
-            update_database_separados(dic_musica)
+            # update_database_separados(dic_musica)
             dpg.add_button(label=f"{ntpath.basename(filename)}", callback=play, width=-1,
                            height=25, user_data=filename.replace("\\", "/"), parent="list")
             dpg.add_spacer(height=2, parent="list")
