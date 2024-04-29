@@ -1,6 +1,6 @@
 <p align="center"><img src="https://github.com/NotCookey/Rainy/assets/88582190/fc09007d-43a8-4526-8824-ad684a303d52" width="130px"></p>
 <h2 align="center">Rainy Musicart</h2>
-<p align="center"><b>Rainy Musicart is a lightweight music player with an aesthetically pleasing design</b></p>
+<p align="center"><b>Rainy Musicart is a lightweight music player with an aesthetically pleasing design~</b></p>
 <kbd><img src="https://user-images.githubusercontent.com/88582190/266058070-c806c611-f65c-459f-bce3-e2ea2a175db3.png"></kbd>
 
 ## About
